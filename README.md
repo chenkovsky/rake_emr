@@ -1,8 +1,17 @@
 # RakeEmr
+*developping*
+make rake run on aws emr.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rake_emr`. To experiment with that code, run `bin/console` for an interactive prompt.
+when running tasks on emr. you have two choices.
 
-TODO: Delete this and the text above, and describe your gem
+One is offical aws add step, but this cannot be applied to complex tasks. 
+
+The other is login to the master of cluster, copy your scripts to master, and run tasks on master. For this choice, you have to take care of cluster status. 
+
+cluster initialization takes a lot of time and money. We want to test *whole* task flow on local hadoop, and run it on aws without changing any code.
+
+this library takes care of all things for you.
+
 
 ## Installation
 
@@ -23,7 +32,9 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
+if not ENV["on_local"]
+    RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
+end
 RakeEmr.set_ssl_ca_file "/home/chenkovsky.chen/.ssh/chenkovsky.chen.pem"
 RakeEmr.script_dirs << "scripts"
 
@@ -36,17 +47,12 @@ end
 after config the parameters. execute
 
 ```bash
-rake A
+rake A # run on aws
+rake A on_local=true # run on local hdfs
 ```
 
-this library will take care of cluster initialization, and deinitialization.
-if you comment configure,
 
-```ruby
-#RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
-```
 
-then you can run it on local hadoop.
 
 ## Contributing
 
