@@ -22,17 +22,35 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
+RakeEmr.set_ssl_ca_file "/home/chenkovsky.chen/.ssh/chenkovsky.chen.pem"
+RakeEmr.script_dirs << "scripts"
 
-## Development
+task :A do
+    rsh "hadoop fs ls .."
+    adistcp "s3://....", "hdfs://....."
+end
+```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+after config the parameters. execute
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```bash
+rake A
+```
+
+this library will take care of cluster initialization, and deinitialization.
+if you comment configure,
+
+```ruby
+#RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
+```
+
+then you can run it on local hadoop.
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/rake_emr/fork )
+1. Fork it ( https://github.com/chenkovsky/rake_emr/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
