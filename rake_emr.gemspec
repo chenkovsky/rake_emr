@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "rake_emr"
   spec.version       = RakeEmr::VERSION
   spec.authors       = ["chenkovsky.chen"]
-  spec.email         = ["chenkovsky.chen@cootek.cn"]
+  spec.email         = ["chenkov@yeah.net"]
 
   spec.summary       = %q{make rake run on aws emr}
   spec.description   = %q{make rake run on aws emr}
