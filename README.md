@@ -33,7 +33,7 @@ Or install it yourself as:
 
 ```ruby
 if not ENV["on_local"]
-    RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://user.cootek/chenkovsky.chen/log")
+    RakeEmr.default_config("chenkovsky.chen", "ime_user_profile", "s3://chenkovsky.chen/log")
 end
 RakeEmr.set_ssl_ca_file "/home/chenkovsky.chen/.ssh/chenkovsky.chen.pem"
 RakeEmr.script_dirs << "scripts"
