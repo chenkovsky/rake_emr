@@ -8,7 +8,7 @@ One is offical aws add step, but this cannot be applied to complex tasks.
 
 The other is login to the master of cluster, copy your scripts to master, and run tasks on master. For this choice, you have to take care of cluster status. 
 
-cluster initialization takes a lot of time and money. We want to test *whole* task flow on local hadoop, and run it on aws without changing any code.
+cluster initialization takes a lot of time and money. We want to test **whole** task flow on local hadoop, and run it on aws without changing any code.
 
 this library takes care of all things for you.
 
