@@ -12,8 +12,25 @@ module RakeEmr
   @@on_already_created_cluster = false
   @@keep_cluster_open = false
 
-  @@webhdfs_port=50070
   @@webhdfs_username = nil
+
+  @@local_proxy_socket_port = 7070
+  @@local_proxy_http_port = 7071
+  @@webhdfs_port = 50070
+
+  def self.local_proxy_socket_port
+    @@local_proxy_socket_port
+  end
+
+  def self.local_proxy_http_port
+    @@local_proxy_http_port
+  end
+
+  def self.set_local_proxy_port socket_port, http_port
+    @@local_proxy_socket_port = socket_port
+    @@local_proxy_http_port = http_port
+  end
+
   def self.set_cluster_init_param(options={})
     @@init_param = options
   end
@@ -30,10 +47,14 @@ module RakeEmr
     @@ssl_ca_file
   end
 
-  def self.set_cluster cluster_id, master_name
+  def self.set_cluster cluster_id, master_name, webhdfs_port: 50070 #9101 for aws
     @@cluster_id = cluster_id
     @@master_name = master_name
-    WebHDFS::FileUtils.set_server(master_name, @@webhdfs_port, @@webhdfs_username, @@webhdfs_username)
+    @@webhdfs_port = webhdfs_port
+  end
+
+  def self.set_webhdfs_port port
+    @@webhdfs_port = port
   end
 
   def self.on_cluster cluster_id, master_name
@@ -49,9 +70,14 @@ module RakeEmr
     @@master_name
   end
 
+  def self.webhdfs_port
+    @@webhdfs_port
+  end
+
   def self.reset_cluster
     @@cluster_id = nil
     @@master_name = nil
+    @@webhdfs_port = nil
   end
 
   @@script_dirs = Set.new

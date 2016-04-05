@@ -1,8 +1,17 @@
 require "set"
 module FileUtils
+
+    def s3exist?(path)
+        begin
+            rsh "hadoop fs -ls -d #{path}"
+            return true
+        rescue
+            return false
+        end
+    end
     def rsh (cmd, &block)
         if RakeEmr.on_aws?
-            raise "AWS is not initialized" if RakeEmr.initialized?
+            raise "AWS is not initialized" if not RakeEmr.initialized?
             raise "ssl ca file is not setted" if not RakeEmr.ssl_ca_file
             cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{RakeEmr.master_name} bash #{cmd}"
         end

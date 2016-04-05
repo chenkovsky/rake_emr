@@ -3,6 +3,7 @@ require "rake_emr/aws_config"
 require "rake_emr/aws_hook"
 require "rake_emr/hadoop_utils"
 require "rake_emr/aws_client"
+require "rake_emr/curl_webhdfs.rb"
 module RakeEmr
   def self.default_config(key_name, cluster_name, log_path, bootstrap_actions: [])
     conf = AWSClient.instance.default_options

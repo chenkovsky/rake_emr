@@ -1,6 +1,7 @@
 require "rake_exception_hook"
 module RakeEmr
     RakeExceptionHook.start do
+        webhdfs_port = 9101
         if RakeEmr.need_to_create_cluster? and RakeEmr.init_param
             STDERR.puts "[LOG] starting cluster"
             raise "KeyName is not setted" if not RakeEmr.init_param["ec2-attributes"] or not RakeEmr.init_param["ec2-attributes"]["KeyName"]
@@ -18,6 +19,9 @@ module RakeEmr
             RakeEmr.set_cluster cluster_id, master_dns
         end
         if RakeEmr.on_aws?
+            RakeEmr.set_webhdfs_port webhdfs_port
+            STDERR.puts "#### connecting webhdfs : #{RakeEmr.master_name}: #{RakeEmr.webhdfs_port}"
+            WebHDFS::FileUtils.set_server(RakeEmr.master_name, RakeEmr.webhdfs_port)
             dir_occupied = %w{bin conf etc hive libexec pig Cascading-2.5-SDK contrib hadoop-examples.jar lib mahout sbin share}
             RakeEmr.script_dirs.each do |d|
                 raise "Dir name #{d} is occupied by aws." if dir_occupied.include? d.gsub(/\/+$/, "").split()[-1]
