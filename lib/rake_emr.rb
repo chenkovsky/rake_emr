@@ -11,7 +11,6 @@ module RakeEmr
     conf["name"] = cluster_name
     conf["log-uri"] = log_path
     conf["bootstrap-actions"] += bootstrap_actions
-    @@webhdfs_username = key_name
     set_cluster_init_param conf
   end
 end

@@ -12,8 +12,6 @@ module RakeEmr
   @@on_already_created_cluster = false
   @@keep_cluster_open = false
 
-  @@webhdfs_username = nil
-
   @@local_proxy_socket_port = 7070
   @@local_proxy_http_port = 7071
   @@webhdfs_port = 50070

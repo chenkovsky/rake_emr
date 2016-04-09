@@ -64,7 +64,7 @@ module RakeEmr
                 if not x.include? "Args"
                     x_str = ""
                 else
-                    x_str = ",["+x["Args"].map{|x| x.inspect}.join(",")+"]"
+                    x_str = ",Args=["+x["Args"].map{|x| x.inspect}.join(",")+"]"
                 end
                 "--bootstrap-action Path=#{x["Path"]}#{x_str}"
             }.join(" ")

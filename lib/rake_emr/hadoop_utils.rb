@@ -13,7 +13,7 @@ module FileUtils
         if RakeEmr.on_aws?
             raise "AWS is not initialized" if not RakeEmr.initialized?
             raise "ssl ca file is not setted" if not RakeEmr.ssl_ca_file
-            cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{RakeEmr.master_name} bash #{cmd}"
+            cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{RakeEmr.master_name} '#{cmd}'"
         end
         sh cmd, &block
     end
@@ -31,21 +31,23 @@ module FileUtils
     end
 
     def pig(script, param = {})
-        param_str = param.map{|k,v| "-p #{k}=#{v}"}.join(" ")
-        rsh "pig #{srcipt} #{param_str}"
+        param_str = param.map{|k,v| "-param #{k}=#{v}"}.join(" ")
+        rsh "pig -f #{script} #{param_str}"
     end
 
     def streaming(options = {})
         default_options = {
             "Dmapreduce.job.name" => "rake_aws_hadoop_anonymous",
-            "Dmapreduce.map.tasks" => 1,
-            "Dmapreduce.reduce.tasks" => 1,
-            "Dmapreduce.map.tasks.speculative.execution" => false,
-            "Dmapreduce.reduce.tasks.speculative.execution" => false,
-            "Dstream.non.zero.exit.is.failure" => false,
+            "Dmapreduce.compress.map.output" => true,
+            "Dmapreduce.map.output.compression.codec" => "com.hadoop.compression.lzo.LzoCodec",
+            # "Dmapreduce.map.tasks" => 100,
+            # "Dmapreduce.reduce.tasks" => 100,
+            # "Dmapreduce.map.tasks.speculative.execution" => false,
+            # "Dmapreduce.reduce.tasks.speculative.execution" => false,
+            # "Dstream.non.zero.exit.is.failure" => false,
             "numReduceTasks" => 100
         }
-        options = Hash[options.map{|k,str| [k.to_s,v] } ]
+        options = Hash[options.map{|k,str| [k.to_s, str] } ]
 
         if not options.include? "mapper" and not options.include? "reducer"
             raise "No mapper and reducer for streamming"
@@ -61,10 +63,19 @@ module FileUtils
         if not options.include? "files"
             raise "files is not setted for streaming"
         end
+
         if not options["files"].is_a? String
             raise "files parameter error" if not options.respond_to? :each
             options["files"] = options["files"].map{|x| x.to_s}.join ","
         end
+
+        f = options.delete "files"
+        fstr = ""
+        if f
+            fstr = "-files #{f}"
+        end
+        
+
 
         default_options.update(options)
         option_str = default_options.map do |k,v|
@@ -76,7 +87,7 @@ module FileUtils
         end.join(" ")
         env_streaming = ENV["HADOOP_STEAMMING_LIB"]
         streaming_lib = if env_streaming then env_streaming else "/home/hadoop/contrib/streaming/hadoop-streaming.jar" end
-        cmd = "hadoop jar #{streaming_lib} #{option_str}"
+        cmd = "hadoop jar #{streaming_lib} #{fstr} #{option_str}"
         rsh cmd
     end
 end
