@@ -40,12 +40,17 @@ module FileUtils
             "Dmapreduce.job.name" => "rake_aws_hadoop_anonymous",
             "Dmapreduce.compress.map.output" => true,
             "Dmapreduce.map.output.compression.codec" => "com.hadoop.compression.lzo.LzoCodec",
+            "Dmapred.output.compress" => true,
+            "Dmapred.output.compression.codec" => "com.hadoop.compression.lzo.LzopCodec",
+            #"Dmapreduce.output.compress" => true,
+            #"Dmapreduce.output.fileoutputformat.compress.codec" => "com.hadoop.compression.lzo.LzoCodec",
+            "Dstream.map.input.ignoreKey" => true,
             # "Dmapreduce.map.tasks" => 100,
             # "Dmapreduce.reduce.tasks" => 100,
             # "Dmapreduce.map.tasks.speculative.execution" => false,
             # "Dmapreduce.reduce.tasks.speculative.execution" => false,
             # "Dstream.non.zero.exit.is.failure" => false,
-            "numReduceTasks" => 100
+            "numReduceTasks" => 100,
         }
         options = Hash[options.map{|k,str| [k.to_s, str] } ]
 
@@ -74,8 +79,13 @@ module FileUtils
         if f
             fstr = "-files #{f}"
         end
-        
 
+        input = options.delete "input"
+        if input.is_a? Array
+            input_str = input.map{|i| "-input #{i}"}.join(" ")
+        else
+            input_str = "-input #{input}"
+        end
 
         default_options.update(options)
         option_str = default_options.map do |k,v|
@@ -87,7 +97,7 @@ module FileUtils
         end.join(" ")
         env_streaming = ENV["HADOOP_STEAMMING_LIB"]
         streaming_lib = if env_streaming then env_streaming else "/home/hadoop/contrib/streaming/hadoop-streaming.jar" end
-        cmd = "hadoop jar #{streaming_lib} #{fstr} #{option_str}"
+        cmd = "hadoop jar #{streaming_lib} #{fstr} #{option_str} #{input_str}"
         rsh cmd
     end
 end
