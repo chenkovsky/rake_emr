@@ -7,7 +7,7 @@ module RakeEmr
             "service-role" => "EMR_DefaultRole",
             "ec2-attributes" => {
                 #"KeyName"
-                "SubnetId" => "subnet-2173c756",
+                #"SubnetId" => "",
                 "InstanceProfile" => "EMR_EC2_DefaultRole"
             },
             #"name"
