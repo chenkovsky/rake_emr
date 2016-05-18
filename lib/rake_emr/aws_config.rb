@@ -45,10 +45,10 @@ module RakeEmr
     @@ssl_ca_file
   end
 
-  def self.set_cluster cluster_id, master_name, webhdfs_port: 50070 #9101 for aws
+  def self.set_cluster cluster_id, master_name #, webhdfs_port: 50070 #9101 for aws
     @@cluster_id = cluster_id
     @@master_name = master_name
-    @@webhdfs_port = webhdfs_port
+    #@@webhdfs_port = webhdfs_port
   end
 
   def self.set_webhdfs_port port
@@ -75,7 +75,7 @@ module RakeEmr
   def self.reset_cluster
     @@cluster_id = nil
     @@master_name = nil
-    @@webhdfs_port = nil
+    #@@webhdfs_port = nil
   end
 
   @@script_dirs = Set.new
