@@ -120,7 +120,7 @@ CMD
 
         def wait_for_master_hadoop_ready master_dns, ssl_ca_file, sleep_time: 10
             while true
-                cmd = "ssh -i #{ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{master_dns} hadoop fs -ls /tmp/"
+                cmd = "ssh -i #{ssl_ca_file} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null hadoop@#{master_dns} hadoop fs -ls /tmp/"
                 STDERR.puts "executing: #{cmd}"
                 out = `#{cmd}`
                 if out.include? "/tmp/hadoop-yarn"

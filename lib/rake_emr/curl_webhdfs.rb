@@ -53,7 +53,7 @@ module WebHDFS
         header_str = "--header #{header.inspect}"
       end
       url = "http://#{@host}:#{@port}#{request_path}"
-      cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{RakeEmr.master_name} 'curl -s -X #{method} #{header_str} #{url.inspect}'"
+      cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null hadoop@#{RakeEmr.master_name} 'curl -s -X #{method} #{header_str} #{url.inspect}'"
       puts "executing: #{cmd}"
       `#{cmd}`
     end

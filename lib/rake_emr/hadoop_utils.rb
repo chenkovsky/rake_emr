@@ -13,7 +13,7 @@ module FileUtils
         if RakeEmr.on_aws?
             raise "AWS is not initialized" if not RakeEmr.initialized?
             raise "ssl ca file is not setted" if not RakeEmr.ssl_ca_file
-            cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no hadoop@#{RakeEmr.master_name} '#{cmd}'"
+            cmd = "ssh -i #{RakeEmr.ssl_ca_file} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null hadoop@#{RakeEmr.master_name} '#{cmd}'"
         end
         sh cmd, &block
     end
